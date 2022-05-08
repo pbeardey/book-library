@@ -1,0 +1,30 @@
+{
+  "name": "book-library",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prestart":"node scripts/create-database.js",
+    "start": "nodemon -r dotenv/config index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pbeardey/book-library.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pbeardey/book-library/issues"
+  },
+  "homepage": "https://github.com/pbeardey/book-library#readme",
+  "devDependencies": {
+    "dotenv": "^16.0.0",
+    "nodemon": "^2.0.16"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3"
+  }
+}
