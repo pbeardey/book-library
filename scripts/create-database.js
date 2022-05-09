@@ -33,11 +33,10 @@ const setUpDatabase = async () => {
 
     // create the database if it doesn't already exist
     await db.query(`CREATE DATABASE IF NOT EXISTS ${DB_NAME}`);
-    //create artist table\
     await db.query(`USE ${DB_NAME}`);
 
     await db.end();
-    //db.close();
+    // db.close();
 
   } catch (err) {
    // if something goes wrong, console.log the error and the current environment variables

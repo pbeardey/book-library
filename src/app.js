@@ -1,11 +1,11 @@
 // src/app.js
 const express = require('express');
-const readersRouter = require ('./routes/readers');
+const readerRouter = require ('./routes/readers');
 
 const app = express();
 
 app.use(express.json());
 
-app.use('/readers', readersRouter);
+app.use('/readers', readerRouter);
 
 module.exports = app;

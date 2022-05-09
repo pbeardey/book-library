@@ -1,8 +1,10 @@
 // src/controllers/readers.js
 
-const getDb = require('../models/index');
-
+const { download } = require('express/lib/response');
+const { Reader } = require('../models');
 
 exports.createReader = async (req, res)  => {
-   res.sendStatus(201);
+   const newReader = await Reader.create(req.body);
+   res.status(201).json(newReader);
 }
+
