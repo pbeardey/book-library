@@ -54,3 +54,19 @@ exports.patchReaderById = async (req, res) => {
    }
 
 }
+
+//DELETE reader by id
+exports.deleteReaderById = async (req, res) => {
+   const { readerId } = req.params;
+   
+   const  affectedRows  = await Reader.destroy( { where: {id: readerId} } );
+   try{
+      if(!affectedRows) {
+         res.status(404).json({error: 'The reader could not be found.'});
+      } else {
+         res.status(204).json(affectedRows);
+      }
+   } catch(err) {
+      res.status(500).json(err);
+   }
+}

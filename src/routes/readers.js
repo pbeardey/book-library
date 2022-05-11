@@ -10,6 +10,6 @@ router.get ('/', readersController.readReaders);
 router.get ('/:readerId', readersController.readReaderById);
 router.post ('/', readersController.createReader);
 router.patch ('/:readerId', readersController.patchReaderById);
-
+router.delete ('/:readerId', readersController.deleteReaderById);
 
 module.exports = router;
