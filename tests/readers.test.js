@@ -1,4 +1,4 @@
-// tests/reader.test.js "CRUD"
+// tests/reader.test.js "CRUD"+password
 const { expect } = require('chai');
 const request = require('supertest');
 const { Reader } = require('../src/models');
@@ -32,6 +32,76 @@ describe('/readers', () => {
     });
   });
 
+  describe('validate reader fields', () => {
+    describe('POST /readers', () => {
+      it('check reader name exists', async () => {
+        const response = await request(app).post('/readers').send({
+          name: '   '
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('Validation notEmpty on name failed');
+      });
+
+      it('check reader email exists', async () => {
+        const response = await request(app).post('/readers').send({
+          email: '   '
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('Validation notEmpty on email failed');
+      });
+
+      it('check reader password exists', async () => {
+        const response = await request(app).post('/readers').send({
+          password: '   '
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('Validation notEmpty on password failed');
+      });
+
+      it('check reader email is of email type', async () => {
+        const response = await request(app).post('/readers').send({
+          email: 'abc'
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('Validation isEmail on email failed');
+      });
+
+      it('check reader email is of email type', async () => {
+        const response = await request(app).post('/readers').send({
+          email: 'abc@123'
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('Validation isEmail on email failed');
+      });
+
+      it('check reader password is at least 8 characters long', async () => {
+        const response = await request(app).post('/readers').send({
+          password: 'passwor'
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('Validation len on password failed');
+      });
+    })
+  })
+
   describe('with records in the database', () => {
     let readers;
 
@@ -59,6 +129,7 @@ describe('/readers', () => {
 
           expect(reader.name).to.equal(expected.name);
           expect(reader.email).to.equal(expected.email);
+          expect(reader.password).to.equal(expected.password);
         });
       });
     });
