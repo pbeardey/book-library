@@ -38,9 +38,9 @@ describe('/readers', () => {
         const response = await request(app).post('/readers').send({
           name: '   '
         });
-        const newReaderRecord = await Reader.findByPk(response.body.id, {
-          raw: true,
-        });
+        // const newReaderRecord = await Reader.findByPk(response.body.id, {
+        //   raw: true,
+        // });
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal('Validation notEmpty on name failed');
       });

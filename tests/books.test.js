@@ -59,6 +59,26 @@ describe('/books', () => {
         ]);
       });
   
+      describe('validate books fields', () => {
+        describe('POST /books', () => {
+          it('check book title exists', async () => {
+            const response = await request(app).post('/books').send({
+              title: '    '
+            });
+            expect(response.status).to.equal(400);
+            expect(response.body.error).to.equal('Validation notEmpty on title failed'); 
+          });
+
+          it('check book author exists', async () => {
+            const response = await request(app).post('/books').send({
+              author: '    '
+            });
+            expect(response.status).to.equal(400);
+            expect(response.body.error).to.equal('Validation notEmpty on author failed'); 
+          });
+        });
+      });
+
       describe('GET /books', () => {
         it('gets all books records', async () => {
           const response = await request(app).get('/books');

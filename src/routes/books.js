@@ -7,10 +7,10 @@ const router = express.Router();
 const booksController = require('../controllers/books');
 
 router.get ('/', booksController.readBooks);
-router.get ('/:bookId', booksController.readBookById);
+router.get ('/:itemId', booksController.readBookById);
 router.post ('/', booksController.createBook);
-router.patch ('/:bookId', booksController.patchBookById);
-router.delete ('/:bookId', booksController.deleteBookById);
+router.patch ('/:itemId', booksController.patchBookById);
+router.delete ('/:itemId', booksController.deleteBookById);
 
 
 module.exports = router;

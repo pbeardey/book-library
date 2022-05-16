@@ -2,81 +2,24 @@
 
 const { download } = require('express/lib/response');
 const { Reader } = require('../models');
+const { createItem, readItems, readItemById, patchItemById, deleteItemById } = require('./helper');
 
-exports.createReader = async (req, res)  => {
-   
-   try {
-      const newReader = await Reader.create(req.body);
-      res.status(201).json(newReader);
-   } catch (err) {
-      if (err.name === "SequelizeValidationError") {
-         const errMsg = err.errors[0].message;
-         res.status(400).json({error:errMsg});
-         //res.status(500).json(err.errors.foreach((e) => {e.message}));
-      } else {
-         res.sendStatus(500);
-      }
-   }
+exports.createReader = (req, res) => {
+   createItem(req, res, Reader);
 };
 
-//GET all readers records
-exports.readReaders = async (req, res) => {
-   
-   try {
-      const readers = await Reader.findAll();
-      res.status(200).json(readers);
-   } catch(err) {
-      res.status(500).json(err);
-   }
+exports.readReaders =  (req, res) => {
+   readItems (req, res, Reader);
 };
 
-//GET reader by Id
-exports.readReaderById = async (req, res) => {
-   const { readerId } = req.params;
-
-   
-   try{
-      const reader = await Reader.findByPk(readerId);
-      if(!reader) {
-         res.status(404).json({ error : "The reader could not be found." });
-      } else {
-         res.status(200).json(reader);
-      }
-   } catch(err) {
-      res.status(500).json(err);
-   }
+exports.readReaderById =  (req, res) => {
+   readItemById (req, res, Reader);
 };
 
-//PATCH reader by Id
-exports.patchReaderById = async (req, res) => {
-   const { readerId } = req.params;
-   const data = req.body;
+exports.patchReaderById =  (req, res) => {
+   patchItemById (req, res, Reader);
+};
 
-   try{
-      const [ affectedRows ] = await Reader.update(data, { where: {id: readerId} } );
-      if(!affectedRows) {
-         res.status(404).json({ error : "The reader could not be found." });
-      } else {
-         res.status(200).json(affectedRows);
-      }
-   } catch(err) {
-      res.status(500).json(err);
-   }
-
-}
-
-//DELETE reader by id
-exports.deleteReaderById = async (req, res) => {
-   const { readerId } = req.params;
-   
-   try{
-      const  affectedRows  = await Reader.destroy( { where: {id: readerId} } );
-      if(!affectedRows) {
-         res.status(404).json({error: 'The reader could not be found.'});
-      } else {
-         res.status(204).json(affectedRows);
-      }
-   } catch(err) {
-      res.status(500).json(err);
-   }
-}
+exports.deleteReaderById = (req, res) => {
+   deleteItemById (req, res, Reader);
+};

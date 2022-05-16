@@ -1,15 +1,15 @@
 // src/routes/readers.js
 
 const express = require('express');
-//const { READUNCOMMITTED } = require('sequelize/types/table-hints');
+
 const router = express.Router();
 
 const readersController = require('../controllers/readers');
 
 router.get ('/', readersController.readReaders);
-router.get ('/:readerId', readersController.readReaderById);
+router.get ('/:itemId', readersController.readReaderById);
 router.post ('/', readersController.createReader);
-router.patch ('/:readerId', readersController.patchReaderById);
-router.delete ('/:readerId', readersController.deleteReaderById);
+router.patch ('/:itemId', readersController.patchReaderById);
+router.delete ('/:itemId', readersController.deleteReaderById);
 
 module.exports = router;

@@ -1,8 +1,14 @@
 // src/models/book.js
 module.exports = (connection, DataTypes) => {
     const schema = {
-        title: DataTypes.STRING,
-        author: DataTypes.STRING,
+        title: {
+            type: DataTypes.STRING,
+            validate: {notEmpty: true}
+        }, 
+        author: {
+            type: DataTypes.STRING,
+            validate: {notEmpty: true}
+        },
         genre: DataTypes.STRING,
         ISBN: DataTypes.STRING,
     };
