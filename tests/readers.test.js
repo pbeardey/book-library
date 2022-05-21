@@ -22,9 +22,10 @@ describe('/readers', () => {
         const newReaderRecord = await Reader.findByPk(response.body.id, {
           raw: true,
         });
-
         expect(response.status).to.equal(201);
         expect(response.body.name).to.equal('Elizabeth Bennet');
+        expect(response.body.email).to.equal('future_ms_darcy@gmail.com');
+        expect(response.body.password).to.equal(undefined);
         expect(newReaderRecord.name).to.equal('Elizabeth Bennet');
         expect(newReaderRecord.email).to.equal('future_ms_darcy@gmail.com');
         expect(newReaderRecord.password).to.equal('secreTpassword2');
@@ -36,13 +37,14 @@ describe('/readers', () => {
     describe('POST /readers', () => {
       it('check reader name exists', async () => {
         const response = await request(app).post('/readers').send({
-          name: '   '
+          name: ' '
         });
-        // const newReaderRecord = await Reader.findByPk(response.body.id, {
-        //   raw: true,
-        // });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal('Validation notEmpty on name failed');
+        expect(newReaderRecord).to.equal(null);
       });
 
       it('check reader email exists', async () => {
@@ -54,6 +56,7 @@ describe('/readers', () => {
         });
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal('Validation notEmpty on email failed');
+        expect(newReaderRecord).to.equal(null);
       });
 
       it('check reader password exists', async () => {
@@ -65,6 +68,7 @@ describe('/readers', () => {
         });
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal('Validation notEmpty on password failed');
+        expect(newReaderRecord).to.equal(null);
       });
 
       it('check reader email is of email type', async () => {
@@ -76,6 +80,7 @@ describe('/readers', () => {
         });
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal('Validation isEmail on email failed');
+        expect(newReaderRecord).to.equal(null);
       });
 
       it('check reader email is of email type', async () => {
@@ -87,6 +92,7 @@ describe('/readers', () => {
         });
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal('Validation isEmail on email failed');
+        expect(newReaderRecord).to.equal(null);
       });
 
       it('check reader password is at least 8 characters long', async () => {
@@ -98,6 +104,7 @@ describe('/readers', () => {
         });
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal('Validation len on password failed');
+        expect(newReaderRecord).to.equal(null);
       });
     })
   })
@@ -129,7 +136,7 @@ describe('/readers', () => {
 
           expect(reader.name).to.equal(expected.name);
           expect(reader.email).to.equal(expected.email);
-          expect(reader.password).to.equal(expected.password);
+          expect(reader.password).to.equal(undefined);
         });
       });
     });
@@ -142,7 +149,7 @@ describe('/readers', () => {
         expect(response.status).to.equal(200);
         expect(response.body.name).to.equal(reader.name);
         expect(response.body.email).to.equal(reader.email);
-        expect(response.body.password).to.equal(reader.password);
+        expect(response.body.password).to.equal(undefined);
       });
 
       it('returns a 404 if the reader does not exist', async () => {

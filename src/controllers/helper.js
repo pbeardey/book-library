@@ -1,15 +1,22 @@
 // src/controllers/helper.js
 const { Reader } = require('../models');
 
+const removePassword = (dataObject) => {
+    if (dataObject.hasOwnProperty('password')) {
+        delete dataObject.password;
+    }
+    return dataObject;
+}
+
 const createItem = async (req, res, model) => {
     try {
        const newItem = await model.create(req.body);
-       res.status(201).json(newItem);
+       const itemWithPasswordRemoved = removePassword(newItem.dataValues);
+       res.status(201).json(itemWithPasswordRemoved);
     } catch (err) {
        if (err.name === "SequelizeValidationError") {
-          const errMsg = err.errors[0].message;
-          res.status(400).json({error:errMsg});
-          //res.status(500).json(err.errors.foreach((e) => {e.message}));
+          const errMsg = err.errors.map((e) => e.message);
+          res.status(400).json({error: errMsg[0]});
        } else {
           res.sendStatus(500);
        }
@@ -19,7 +26,8 @@ const createItem = async (req, res, model) => {
 const readItems = async (req, res, model) => {
     try {
         const items = await model.findAll();
-        res.status(200).json(items);
+        const itemsWithPasswordRemoved = items.map((e)=>removePassword(e.dataValues))
+        res.status(200).json(itemsWithPasswordRemoved);
      } catch(err) {
         res.status(500).json(err);
      }
@@ -30,25 +38,28 @@ const readItemById = async (req, res, model) => {
     try{
        const item = await model.findByPk(itemId);
        if(!item) {
-          res.status(404).json({ error : `The ${model.name.toLowerCase()} could not be found.` });
-       } else {
-          res.status(200).json(item);
+           res.status(404).json({ error : `The ${model.name.toLowerCase()} could not be found.` });
+        } else {
+          const itemWithPasswordRemoved = removePassword(item.dataValues);
+          res.status(200).json(itemWithPasswordRemoved);
        }
     } catch(err) {
-       res.status(500).json(err);  
+        console.log('caught error' + err);
+        res.status(500).json(err);  
     }
 };
 
 const patchItemById = async (req, res, model) => {
     const { itemId } = req.params;
     const data = req.body;
- 
     try{
        const [ affectedRows ] = await model.update(data, { where: {id: itemId} } );
        if(!affectedRows) {
           res.status(404).json({ error : `The ${model.name.toLowerCase()} could not be found.` });
        } else {
-          res.status(200).json(affectedRows);
+          const item = await model.findByPk(itemId);
+          const itemWithPasswordRemoved = removePassword(item.dataValues); 
+          res.status(200).json(itemWithPasswordRemoved);
        }
     } catch(err) {
        res.status(500).json(err);
