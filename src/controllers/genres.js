@@ -2,7 +2,7 @@
 
 const { download } = require('express/lib/response');
 const { Genre } = require('../models');
-const { createItem, readItems, readItemById, patchItemById, deleteItemById } = require('./helper');
+const { createItem, readItems, readItemById, deleteItemById } = require('./helper');
 
 
 exports.createGenre = (req, res) => {
@@ -16,10 +16,6 @@ exports.readGenres = (req, res) => {
 exports.readGenreById = (req, res) => {
    readItemById(req, res, Genre);
 };
-
-// exports.patchGenreById = (req, res) => {
-//    patchItemById(req, res, Genre);
-//  };
 
 exports.deleteGenreById = async (req, res) => {
    deleteItemById(req, res, Genre);

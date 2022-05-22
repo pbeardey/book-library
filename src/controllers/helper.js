@@ -1,22 +1,8 @@
 // src/controllers/helper.js
 const { Reader, Book, Genre, Author } = require('../models');
 
-const get404Error = (model) => ({error: `The ${model} could not be found.`});
-
-// const getModel = (model) => {
-//    const models = {
-//       book: Book,
-//       reader: Reader,
-//       author: Author,
-//       genre: Genre,
-//    };
-//    return models[model];
-// }
-
 const getOptions = (model) => {
    if (model === Book) return {include: [{model:Genre}, {model:Author}]};
-   //if (model === 'genre') return { include: Book};
-   //if (model === 'author') return { include: Book};
    return {};
 }
 
@@ -29,7 +15,6 @@ const removePassword = (dataObject) => {
 
 
 const createItem = async (req, res, model) => {
-   //const options = getOptions(model);
     try {
        const newItem = await model.create(req.body);
        const itemWithPasswordRemoved = removePassword(newItem.dataValues);
@@ -47,7 +32,6 @@ const createItem = async (req, res, model) => {
 
 const readItems = async (req, res, model) => {
    const options = getOptions(model);
-   console.log(options);
     try {
         const items = await model.findAll(options);
         const itemsWithPasswordRemoved = items.map((e)=>removePassword(e.dataValues))
@@ -57,10 +41,11 @@ const readItems = async (req, res, model) => {
      }
 };
 
-const readItemById = async (req, res, model) => {   
+const readItemById = async (req, res, model) => {  
+   const options = getOptions(model); 
     const { itemId } = req.params;
     try{
-       const item = await model.findByPk(itemId, {include: [{model:Genre}, {model:Author}]});
+       const item = await model.findByPk(itemId, options);
        if(!item) {
            res.status(404).json({ error : `The ${model.name.toLowerCase()} could not be found.` });
         } else {
