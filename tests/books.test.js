@@ -61,20 +61,36 @@ describe('/books', () => {
   
       describe('validate books fields', () => {
         describe('POST /books', () => {
-          it('check book title exists', async () => {
+          it('check book title is not empty', async () => {
             const response = await request(app).post('/books').send({
-              title: '    '
+              title: '    ',
+              author: 'William Goulding'
             });
             expect(response.status).to.equal(400);
-            expect(response.body.error).to.equal('Validation notEmpty on title failed'); 
+            expect(response.body.error).to.equal('A book title cannot be empty'); 
+          });
+          it('check book title is not null', async () => {
+            const response = await request(app).post('/books').send({
+              author: 'William Goulding'
+            });
+            expect(response.status).to.equal(400);
+            expect(response.body.error).to.equal('A book title is required'); 
           });
 
-          it('check book author exists', async () => {
+          it('check book author is not empty', async () => {
             const response = await request(app).post('/books').send({
+              title: 'Lord of the Flies',
               author: '    '
             });
             expect(response.status).to.equal(400);
-            expect(response.body.error).to.equal('Validation notEmpty on author failed'); 
+            expect(response.body.error).to.equal('A book author cannot be empty'); 
+          });
+          it('check book author is not null', async () => {
+            const response = await request(app).post('/books').send({
+              title: 'Lord of the Flies'
+            });
+            expect(response.status).to.equal(400);
+            expect(response.body.error).to.equal('A book author is required'); 
           });
         });
       });
